@@ -1,6 +1,6 @@
 import fastify from 'fastify';
 import createDebug from 'debug';
-import { fetchJson } from './util/index.js';
+import { fetchApi } from './util/index.js';
 import { CliOptions } from './options.js';
 
 const debug = createDebug('start');
@@ -16,6 +16,7 @@ export async function startServer(options: CliOptions) {
   // Completion API
   app.post('/openai/deployments/:deployment/completions', async function (request, reply) {
     const { deployment } = request.params as any;
+    const { stream } = request.body as any;
     debug(`Received text completion request (deployment: ${deployment})`, request.body);
 
     // Convert completion request to chat request
@@ -23,7 +24,7 @@ export async function startServer(options: CliOptions) {
     query.messages = [{ role: 'user', content: query.prompt }];
     delete query.prompt;
 
-    const result = await fetchJson(`${ollamaUrl}/v1/chat/completions`, {
+    const result = await fetchApi(`${ollamaUrl}/v1/chat/completions`, {
       method: 'POST',
       body: JSON.stringify({
         ...query,
@@ -36,14 +37,18 @@ export async function startServer(options: CliOptions) {
   // Chat API
   app.post('/openai/deployments/:deployment/chat/completions', async function (request, reply) {
     const { deployment } = request.params as any;
+    const { stream } = request.body as any;
     debug(`Received chat completion request (deployment: ${deployment})`, request.body);
-    return fetchJson(`${ollamaUrl}/v1/chat/completions`, {
+
+    const data = await fetchApi(`${ollamaUrl}/v1/chat/completions`, {
       method: 'POST',
       body: JSON.stringify({
         ...request.body as any,
         model: options.useDeployment ? deployment : model,
       })
-    });
+    }, stream);
+
+    return stream ? reply.type('text/event-stream').send(data) : data;
   });
   
   // Embeddings API
@@ -53,7 +58,7 @@ export async function startServer(options: CliOptions) {
     const { input } = request.body as any;
     debug(`Received embeddings request (deployment: ${deployment})`, request.body);
 
-    const result = await fetchJson(`${ollamaUrl}/api/embeddings`, {
+    const result = await fetchApi(`${ollamaUrl}/api/embeddings`, {
       method: 'POST',
       body: JSON.stringify({
         prompt: input,
