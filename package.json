@@ -1,0 +1,83 @@
+{
+  "name": "ollamazure",
+  "version": "0.0.0",
+  "description": "Emulates Azure OpenAI API using Ollama and local models",
+  "type": "module",
+  "bin": {
+    "ollamazure": "./bin/ollamazure.js",
+    "oaz": "./bin/ollamazure.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sinedied/ollamazure"
+  },
+  "exports": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "start": "node ./bin/ollamazure.js",
+    "build": "npm run clean -s && tsc",
+    "build:watch": "tsc -w --sourceMap",
+    "lint": "xo",
+    "lint:fix": "xo --fix",
+    "clean": "rm -rf lib *.tgz",
+    "release:check": "semantic-release --dry-run"
+  },
+  "dependencies": {
+    "@inquirer/checkbox": "^2.3.5",
+    "@inquirer/prompts": "^5.0.5",
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "debug": "^4.3.5",
+    "fast-glob": "^3.3.2",
+    "fastify": "^4.28.1"
+  },
+  "devDependencies": {
+    "@types/debug": "^4.1.12",
+    "@types/node": "^20.14.1",
+    "semantic-release": "^24.0.0",
+    "semantic-release-npm-github": "^5.0.0",
+    "typescript": "^5.4.5",
+    "xo": "^0.58.0"
+  },
+  "keywords": [
+    "azure",
+    "openai",
+    "api",
+    "proxy",
+    "emulator",
+    "cli",
+    "llm"
+  ],
+  "author": {
+    "name": "Yohan Lasorsa",
+    "url": "https://twitter.com/sinedied"
+  },
+  "homepage": "https://github.com/sinedied/ollamazure",
+  "bugs": {
+    "url": "https://github.com/sinedied/ollamazure/issues"
+  },
+  "license": "MIT",
+  "release": {
+    "extends": "semantic-release-npm-github",
+    "branches": "main"
+  },
+  "prettier": {
+    "trailingComma": "none",
+    "bracketSpacing": true
+  },
+  "xo": {
+    "space": true,
+    "prettier": true,
+    "envs": [
+      "node"
+    ]
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "files": [
+    "bin",
+    "lib"
+  ]
+}

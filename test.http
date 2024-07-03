@@ -1,0 +1,27 @@
+##################################################################
+# VS Code with REST Client extension is needed to use this file.
+# Download at: https://aka.ms/vscode/rest-client
+##################################################################
+
+@api_host = http://localhost:3000
+
+# Completions
+POST {{api_host}}//openai/deployments/test/chat/completions
+Content-Type: application/json
+
+{
+  "prompt": "once upon a time"
+}
+
+###
+
+# Chat with the bot using streaming
+POST {{api_host}}/chat/stream
+Content-Type: application/json
+
+{
+  "messages": [{
+    "content": "How to search and book rentals?",
+    "role": "user"
+  }]
+}
