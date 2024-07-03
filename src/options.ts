@@ -3,6 +3,7 @@ export type CliOptions = {
   yes: boolean;
   model: string;
   embeddings: string;
+  useDeployment: boolean;
   host: string;
   port: number;
   ollamaUrl: string;

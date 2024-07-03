@@ -3,25 +3,53 @@
 # Download at: https://aka.ms/vscode/rest-client
 ##################################################################
 
-@api_host = http://localhost:3000
+@api_host = http://localhost:4041
 
-# Completions
-POST {{api_host}}//openai/deployments/test/chat/completions
+POST http://localhost:11434/v1/completions
 Content-Type: application/json
-
+  
 {
-  "prompt": "once upon a time"
+  "model": "phi3",
+  "prompt": "Once upon a time",
+  "max_tokens": 10
 }
 
 ###
 
-# Chat with the bot using streaming
-POST {{api_host}}/chat/stream
+# Completions
+POST {{api_host}}/openai/deployments/test/completions
 Content-Type: application/json
 
 {
-  "messages": [{
-    "content": "How to search and book rentals?",
-    "role": "user"
-  }]
+  "prompt": "Once upon a time",
+  "max_tokens": 50
+}
+
+###
+
+# Chat completions
+POST {{api_host}}/openai/deployments/test/chat/completions
+Content-Type: application/json
+
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful assistant."
+    },
+    {
+      "role": "user",
+      "content": "Say hello in French, Japanese, and Spanish."
+    }
+  ]
+}
+
+###
+
+# Embeddings
+POST {{api_host}}/openai/deployments/test/embeddings
+Content-Type: application/json
+
+{
+  "input": "Once upon a time"
 }
