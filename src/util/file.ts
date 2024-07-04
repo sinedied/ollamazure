@@ -4,6 +4,7 @@ import fs from 'node:fs/promises';
 export type PackageJson = Record<string, any> & {
   name: string;
   version: string;
+  description: string;
 };
 
 export async function getPackageJson(basePath: string): Promise<PackageJson> {

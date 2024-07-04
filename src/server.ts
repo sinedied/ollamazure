@@ -57,9 +57,9 @@ export async function startServer(options: CliOptions) {
 
   try {
     await checkOllamaModels(options);
-
     await app.listen({ port: options.port });
-    console.log(`ollamazure started on http://${options.host}:${options.port}`);
+
+    console.log(`Azure OpenAI emulator started on http://${options.host}:${options.port}`);
   } catch (error_) {
     const error = error_ as Error;
     console.error(error.message);

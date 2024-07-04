@@ -110,7 +110,16 @@ export async function getOllamaEmbeddings(request: FastifyRequest, options: CliO
 
 export async function checkOllamaModels(options: CliOptions) {
   const { ollamaUrl } = options;
-  const result = (await fetchApi(`${ollamaUrl}/api/tags`)) as ListResponse;
+  let result: ListResponse;
+  try {
+    result = (await fetchApi(`${ollamaUrl}/api/tags`)) as ListResponse;
+  } catch {
+    throw new Error(
+      `Could not connect to Ollama API at ${ollamaUrl}\n\n` +
+        `Make sure Ollama is installed and running.\n` +
+        `You can download it at http://ollama.com/download.`
+    );
+  }
 
   const hasModel = result.models.some(
     (model) => model.name === options.model || model.name === `${options.model}:latest`
