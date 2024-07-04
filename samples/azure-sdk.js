@@ -5,26 +5,28 @@ const openai = new AzureOpenAI({
   // Parameters below must be provided but are not used by the local server
   apiKey: '123456',
   apiVersion: '2024-02-01',
-  deployment: 'gpt-4',
+  deployment: 'gpt-4'
 });
 
 // Chat completion
 const chatCompletion = await openai.chat.completions.create({
-  messages: [{ role: 'user', content: 'Say hello!' }],
+  messages: [{ role: 'user', content: 'Say hello!' }]
 });
 
-console.log('Chat completion: ' + chatCompletion.choices[0].message?.content);
+console.log(chatCompletion.choices[0].message.content);
 
 // Text completion
 const completion = await openai.completions.create({
-  prompt: 'Say hello in French: ',
+  prompt: 'Say hello in French: '
 });
 
-console.log('Text completion: ' + completion.choices[0].text);
+console.log(completion.choices[0].text);
 
 // Embeddings
 const embeddings = await openai.embeddings.create({
-  documents: ['Once upon a time', 'The end.'],
+  input: ['Once upon a time', 'The end.']
 });
 
-console.log(embeddings);
+for (const embedding of embeddings.data) {
+  console.log(embedding);
+}
