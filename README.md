@@ -13,7 +13,7 @@
 
 ⭐ If you like this tool, star it on GitHub — it helps a lot!
 
-[Usage](#usage) • [Azure OpenAI compatibility](#azure-openai-compatibility) • [Sample code](#sample-code)
+[Overview](#overview) • [Usage](#usage) • [Azure OpenAI compatibility](#azure-openai-compatibility) • [Sample code](#sample-code)
 
 <!-- 
 TODO: create image with SDKs calling ollamazure directing to Ollama or Azure OpenAI
@@ -24,6 +24,12 @@ TODO: create image with SDKs calling ollamazure directing to Ollama or Azure Ope
 ---
 
 Emulates [Azure OpenAI](https://learn.microsoft.com/azure/ai-services/openai/overview) API on your local machine using [Ollama](https://ollama.com) and open-source models.
+
+## Overview
+
+Using this tool, you can run your own local server that emulates the Azure OpenAI API, allowing you to test your code locally without incurring costs or being rate-limited. This is especially useful for development and testing purposes, or when you need to work offline.
+
+By default, [`phi3`](https://ollama.com/library/phi3) is used as the model for completions, and [`all-minilm:l6-v2`](https://ollama.com/library/all-minilm:l6-v2) for embeddings. You can change these models using the [configuration options](#configuration-options).
 
 ## Usage
 
@@ -40,8 +46,6 @@ Or use it directly with `npx` without installing it:
 ```bash
 npx ollamazure
 ```
-
-By default, [`phi3`](https://ollama.com/library/phi3) is used as the model for completions, and [`all-minilm:l6-v2`](https://ollama.com/library/all-minilm:l6-v2) for embeddings. You can change these models using the configuration options.
 
 > [!TIP]
 > When installed locally, you can run the CLI using either `ollamazure` or `oaz` for short.
