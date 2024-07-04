@@ -62,3 +62,37 @@ Options:
 | [Reproducible outputs](https://learn.microsoft.com/azure/ai-services/openai/how-to/reproducible-output?tabs=pyton) | ✅ / ✅ |
 | [Vision](https://learn.microsoft.com/azure/ai-services/openai/how-to/gpt-with-vision?tabs=rest%2Csystem-assigned%2Cresource) | ⛔ / ⛔ |
 | [Assistants](https://learn.microsoft.com/azure/ai-services/openai/how-to/assistant) | ⛔ / ⛔ |
+
+## Sample code
+
+See all code examples in the [samples](samples) folder.
+
+### Azure OpenAI SDK
+
+```typescript
+import { AzureOpenAI } from 'openai';
+
+const openai = new AzureOpenAI({
+  // This is where you point to your local server
+  endpoint: 'http://localhost:4041',
+
+  // Parameters below must be provided but are not used by the local server
+  apiKey: '123456',
+  apiVersion: '2024-02-01',
+  deployment: 'gpt-4',
+});
+
+const chatCompletion = await openai.chat.completions.create({
+  messages: [{ role: 'user', content: 'Say hello!' }],
+});
+
+console.log('Chat completion: ' + chatCompletion.choices[0]!.message?.content);
+```
+
+Alternatively, you can set the `AZURE_OPENAI_ENDPOINT` environment variable to `http://localhost:4041` instead of passing it to the constructor. Everything else will work the same.
+
+If you're using managed identity, this will work as well unless you're in a local container. In that case, you can use function `() => '1'` for the the `azureADTokenProvider` parameter in the constructor.
+
+### LangChain.js
+
+### LlamaIndex.TS
