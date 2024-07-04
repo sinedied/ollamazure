@@ -1,7 +1,9 @@
 import { AzureOpenAI } from 'openai';
 
 const openai = new AzureOpenAI({
+  // This is where you point to your local server
   endpoint: 'http://localhost:4041',
+
   // Parameters below must be provided but are not used by the local server
   apiKey: '123456',
   apiVersion: '2024-02-01',
