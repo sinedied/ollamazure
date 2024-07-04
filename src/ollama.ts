@@ -1,6 +1,8 @@
 import { FastifyRequest } from "fastify";
-import { CliOptions, HttpError, askForConfirmation, fetchApi, runCommand } from "./index.js";
-import { Stream } from "stream";
+import { CliOptions, askForConfirmation, fetchApi, runCommand } from "./index.js";
+import {EventSourceParserStream} from 'eventsource-parser/stream'
+
+
 
 export async function getOllamaCompletion(request: FastifyRequest, options: CliOptions) {
     const { ollamaUrl, model } = options;
@@ -18,7 +20,26 @@ export async function getOllamaCompletion(request: FastifyRequest, options: CliO
         ...query,
         model: options.useDeployment ? deployment : model,
       })
-    });
+    }, stream);
+
+    if (stream) {
+      const eventStream = (result as ReadableStream)
+        .pipeThrough(new TextDecoderStream())
+        .pipeThrough(new EventSourceParserStream())
+        .pipeThrough(new TransformStream({
+          transform(chunk, controller) {
+            let { data } = chunk;
+            if (data !== `[DONE]`) {
+              const json = JSON.parse(data);
+              const completion = createCompletionFromChat(json, true);
+              data = JSON.stringify(completion);
+            }
+            controller.enqueue(`data: ${data}\n\n`);
+          }
+        }));
+      return eventStream;
+    }
+
     return createCompletionFromChat(result);
 }
 
@@ -83,7 +104,7 @@ async function askForModelDownload(model: string, confirm: boolean = false) {
   }
 }
 
-function createCompletionFromChat(result: any) {
+function createCompletionFromChat(result: any, chunk: boolean = false) {
   return {
     id: result.id.replace('chatcmpl-', 'cmpl-'),
     object: 'text_completion',
@@ -92,7 +113,7 @@ function createCompletionFromChat(result: any) {
     choices: [
       {
         index: 0,
-        text: result.choices[0].message.content,
+        text: chunk ? result.choices[0].delta.content : result.choices[0].message.content,
         logprobs: null,
         finish_reason: result.choices[0].finish_reason
       }

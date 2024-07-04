@@ -8,9 +8,7 @@ const debug = createDebug('server');
 
 export async function startServer(options: CliOptions) {
   debug('Starting server with:', { options });
-
   const app = fastify();
-  const { ollamaUrl, model, embeddings } = options;
   
   app.get('/', async function (request, reply) {
     return { message: 'ollamazure server up' };
@@ -19,10 +17,12 @@ export async function startServer(options: CliOptions) {
   // Completion API
   app.post('/openai/deployments/:deployment/completions', async function (request, reply) {
     const { deployment } = request.params as any;
+    const { stream } = request.body as any;
     debug(`Received text completion request (deployment: ${deployment})`, request.body);
 
     try {
-      return getOllamaCompletion(request, options);
+      const data = await getOllamaCompletion(request, options);
+      return stream ? reply.type('text/event-stream').send(data) : data;
     } catch (error) {
       return processOllamaError(error as HttpError);
     }
@@ -67,7 +67,7 @@ export async function startServer(options: CliOptions) {
 }
 
 function processOllamaError(error: HttpError) {
-  const errorMessage = error.status === 404 ? `Model not found: ${error.message}` : `Failed to call Ollama API.\n${error.message}`;
+  const errorMessage = error.status === 404 ? `Model not found: ${error.message}` : `Failed to call Ollama API: ${error.message}`;
   console.error(errorMessage);
   return { error: errorMessage };
 }
