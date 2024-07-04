@@ -24,6 +24,32 @@ Or use it directly with `npx` without installing it:
 npx ollamazure
 ```
 
+By default, [`phi3`](https://ollama.com/library/phi3) is used as the model for completions, and [`all-minilm:l6-v2`](https://ollama.com/library/all-minilm:l6-v2) for embeddings. You can change these models using the configuration options.
+
+> [!TIP]
+> When installed locally, you can run the CLI using either `ollamazure` or `oaz` for short.
+
+### Configuration options
+
+```bash
+ollamazure --help
+Usage: ollamazure [options]
+
+Emulates Azure OpenAI API using Ollama and local models.
+
+Options:
+  --verbose                  show detailed logs
+  -y, --yes                  do not ask for confirmation (default: false)
+  -m, --model <name>         model to use for chat and text completions (default: "phi3")
+  -e, --embeddings <name>    model to use for embeddings (default: "all-minilm:l6-v2")
+  -d, --use-deployment       use deployment name as model name (default: false)
+  -h, --host <ip>            host to bind to (default: "localhost")
+  -p, --port <number>        port to use (default: 4041)
+  -o, --ollama-url <number>  ollama base url (default: "http://localhost:11434")
+  -v, --version              show the current version
+  --help                     display help for command
+```
+
 ## Azure OpenAI compatibility
 
 | Feature | Supported / with streaming |
