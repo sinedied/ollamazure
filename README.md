@@ -95,4 +95,24 @@ If you're using managed identity, this will work as well unless you're in a loca
 
 ### LangChain.js
 
+```typescript
+import { AzureChatOpenAI } from '@langchain/openai';
+
+// Chat completion
+const model = new AzureChatOpenAI({
+  // This is where you point to your local server
+  azureOpenAIBasePath: 'http://localhost:4041/openai/deployments',
+
+  // Parameters below must be provided but are not used by the local server
+  azureOpenAIApiKey: '123456',
+  azureOpenAIApiVersion: '2024-02-01',
+  azureOpenAIApiDeploymentName: 'gpt-4'
+});
+
+const completion = await model.invoke([{ type: 'human', content: 'Say hello!' }]);
+console.log(completion.content);
+```
+
+If you're using managed identity this will work the same unless you're in a local container. In that case, you can use function `() => '1'` for the the `azureADTokenProvider` parameter in the constructor.
+
 ### LlamaIndex.TS
