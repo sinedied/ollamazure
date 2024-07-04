@@ -1,7 +1,7 @@
 {
   "name": "ollamazure",
   "version": "0.0.0",
-  "description": "Emulates Azure OpenAI API using Ollama and local models",
+  "description": "Emulates Azure OpenAI API on your local machine using Ollama and open-source models.",
   "type": "module",
   "bin": {
     "ollamazure": "./bin/ollamazure.js",

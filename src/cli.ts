@@ -20,7 +20,7 @@ export async function run(arguments_: string[] = process.argv) {
 
   program
     .name(package_.name)
-    .description('Emulates Azure OpenAI API using Ollama and local models.')
+    .description(package_.description)
     .option('--verbose', 'show detailed logs')
     .option('-y, --yes', 'do not ask for confirmation', false)
     .option('-m, --model <name>', 'model to use for chat and text completions', DEFAULT_MODEL)

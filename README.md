@@ -50,7 +50,7 @@ By default, [`phi3`](https://ollama.com/library/phi3) is used as the model for c
 ollamazure --help
 Usage: ollamazure [options]
 
-Emulates Azure OpenAI API using Ollama and local models.
+Emulates Azure OpenAI API on your local machine using Ollama and open-source models.
 
 Options:
   --verbose                  show detailed logs
