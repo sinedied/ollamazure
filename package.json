@@ -34,6 +34,7 @@
     "@langchain/openai": "^0.2.1",
     "@types/debug": "^4.1.12",
     "@types/node": "^20.14.1",
+    "llamaindex": "^0.4.12",
     "ollama": "^0.5.2",
     "openai": "^4.52.3",
     "semantic-release": "^24.0.0",

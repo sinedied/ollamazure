@@ -137,3 +137,31 @@ console.log(completion.content);
 If you're using managed identity this will work the same unless you're in a local container. In that case, you can use a dummy function `() => '1'` for the the `azureADTokenProvider` parameter in the constructor.
 
 ### LlamaIndex.TS
+
+```typescript
+import { OpenAI, OpenAIEmbedding } from "llamaindex";
+
+// Chat completion
+const llm = new OpenAI({
+  azure: {
+    // This is where you point to your local server
+    endpoint: 'http://localhost:4041',
+
+    // Parameters below must be provided but are not used by the local server
+    apiKey: '123456',
+    apiVersion: '2024-02-01',
+    deployment: 'gpt-4'
+  }
+});
+
+const chatCompletion = await llm.chat({
+  messages: [{ role: 'user', content: 'Say hello!' }]
+});
+
+console.log(chatCompletion.message.content);
+```
+
+> [!TIP]
+> Alternatively, you can set the `AZURE_OPENAI_ENDPOINT` environment variable to `http://localhost:4041` instead of passing it to the constructor. Everything else will work the same.
+
+If you're using managed identity, this will work as well unless you're in a local container. In that case, you can use a dummy function `() => '1'` for the the `azureADTokenProvider` parameter in the constructor.
