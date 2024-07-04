@@ -1,4 +1,8 @@
-# ollamazure
+<div align="center">
+
+<!-- <img src="./logo.png" alt="" align="center" height="64" /> -->
+
+# 🦙 ollamazure
 
 [![NPM version](https://img.shields.io/npm/v/ollamazure.svg?style=flat-square)](https://www.npmjs.com/package/ollamazure)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/sinedied/ollamazure/ci.yml?style=flat-square&label=Build)](https://github.com/sinedied/ollamazure/actions)
@@ -9,9 +13,20 @@
 
 Emulates [Azure OpenAI](https://learn.microsoft.com/azure/ai-services/openai/overview) API on your local machine using [Ollama](https://ollama.com) and open-source models.
 
+⭐ If you like this tool, star it on GitHub — it helps a lot!
+
+[Usage](#usage) • [Azure OpenAI compatibility](#azure-openai-compatibility) • [Sample code](#sample-code)
+
+<!-- 
+TODO: create image with SDKs calling ollamazure directing to Ollama or Azure OpenAI
+-->
+
+</div>
+
 ## Usage
 
 You need [Node.js v20+](https://nodejs.org) and [Ollama](https://ollama.com) installed on your machine to use this tool.
+
 You can either install the CLI globally:
 
 ```bash
@@ -63,6 +78,8 @@ Options:
 | [Vision](https://learn.microsoft.com/azure/ai-services/openai/how-to/gpt-with-vision?tabs=rest%2Csystem-assigned%2Cresource) | ⛔ / ⛔ |
 | [Assistants](https://learn.microsoft.com/azure/ai-services/openai/how-to/assistant) | ⛔ / ⛔ |
 
+Unimplemented features are currently not supported by Ollama, but are being worked on and may be added in the future.
+
 ## Sample code
 
 See all code examples in the [samples](samples) folder.
@@ -89,9 +106,10 @@ const chatCompletion = await openai.chat.completions.create({
 console.log('Chat completion: ' + chatCompletion.choices[0]!.message?.content);
 ```
 
-Alternatively, you can set the `AZURE_OPENAI_ENDPOINT` environment variable to `http://localhost:4041` instead of passing it to the constructor. Everything else will work the same.
+> [!TIP]
+> Alternatively, you can set the `AZURE_OPENAI_ENDPOINT` environment variable to `http://localhost:4041` instead of passing it to the constructor. Everything else will work the same.
 
-If you're using managed identity, this will work as well unless you're in a local container. In that case, you can use function `() => '1'` for the the `azureADTokenProvider` parameter in the constructor.
+If you're using managed identity, this will work as well unless you're in a local container. In that case, you can use a dummy function `() => '1'` for the the `azureADTokenProvider` parameter in the constructor.
 
 ### LangChain.js
 
@@ -113,6 +131,9 @@ const completion = await model.invoke([{ type: 'human', content: 'Say hello!' }]
 console.log(completion.content);
 ```
 
-If you're using managed identity this will work the same unless you're in a local container. In that case, you can use function `() => '1'` for the the `azureADTokenProvider` parameter in the constructor.
+> [!TIP]
+> Alternatively, you can set the `AZURE_OPENAI_BASE_PATH` environment variable to `http://localhost:4041/openai/deployments` instead of passing it to the constructor. Everything else will work the same.
+
+If you're using managed identity this will work the same unless you're in a local container. In that case, you can use a dummy function `() => '1'` for the the `azureADTokenProvider` parameter in the constructor.
 
 ### LlamaIndex.TS
