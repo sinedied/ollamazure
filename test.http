@@ -24,6 +24,13 @@ curl -X POST http://localhost:4041/openai/deployments/mistral:v0.2/completions \
 
 ###
 
+# Reproducible output
+curl -X POST http://localhost:4041/openai/deployments/test/completions \
+  -H "Content-Type: application/json" \
+  -d '{ "prompt": "Once upon a time", "max_tokens": 20, "seed": 42 }'
+
+###
+
 # Chat completion without streaming
 curl -X POST http://localhost:4041/openai/deployments/test/chat/completions \
   -H "Content-Type: application/json" \
@@ -42,7 +49,7 @@ curl -X POST http://localhost:4041/openai/deployments/test/chat/completions \
 
 ###
 
-# Chat completions wit streaming
+# Chat completions with streaming
 curl -X POST http://localhost:4041/openai/deployments/test/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
@@ -57,6 +64,25 @@ curl -X POST http://localhost:4041/openai/deployments/test/chat/completions \
       }
     ],
     "stream": true
+  }'
+
+###
+
+# JSON mode
+curl -X POST http://localhost:4041/openai/deployments/test/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant."
+      },
+      {
+        "role": "user",
+        "content": "Say hello in French, Japanese, and Spanish. Answer with JSON only."
+      }
+    ],
+    "response_format": { "type": "json_object" }
   }'
 
 ###
