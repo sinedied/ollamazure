@@ -5,9 +5,9 @@ import debug from 'debug';
 import { program } from 'commander';
 import chalk from 'chalk';
 import { getPackageJson } from './util/index.js';
-import { start } from './commands/index.js';
 import { DEFAULT_EMBEDDINGS_MODEL, DEFAULT_MODEL, DEFAULT_PORT, OLLAMA_BASE_URL } from './constants.js';
 import { CliOptions } from './options.js';
+import { startServer } from './server.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -38,7 +38,7 @@ export async function run(arguments_: string[] = process.argv) {
     })
     .allowExcessArguments(false)
     .action(async (options: CliOptions) => {
-      await start(options);
+      await startServer(options);
     });
 
   try {
