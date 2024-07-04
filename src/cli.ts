@@ -26,7 +26,7 @@ export async function run(arguments_: string[] = process.argv) {
     .option('-m, --model <name>', 'model to use for chat and text completions', DEFAULT_MODEL)
     .option('-e, --embeddings <name>', 'model to use for embeddings', DEFAULT_EMBEDDINGS_MODEL)
     .option('-d, --use-deployment', 'use deployment name as model name', false)
-    .option('-h, --host <ip>', 'host to bind to')
+    .option('-h, --host <ip>', 'host to bind to', 'localhost')
     .option('-p, --port <number>', 'port to use', parseFloat, DEFAULT_PORT)
     .option('-o, --ollama-url <number>', 'ollama base url', OLLAMA_BASE_URL)
     .version(package_.version, '-v, --version', 'show the current version')

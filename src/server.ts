@@ -54,7 +54,6 @@ export async function startServer(options: CliOptions) {
   });
   
   // Embeddings API
-  // POST https://openai.azure.com/openai/deployments/{id}/embeddings?api-version={version}
   app.post('/openai/deployments/:deployment/embeddings', async function (request, reply) {
     const { deployment } = request.params as any;
     const { input } = request.body as any;
@@ -72,9 +71,8 @@ export async function startServer(options: CliOptions) {
   });
 
   try {
-    await app.listen({ port: options.port })
-    const address = app.server.address() as any;
-    console.log(`ollamazure server listening on ${address.host}:${address.port}`)
+    await app.listen({ port: options.port });
+    console.log(`ollamazure started on http://${options.host}:${options.port}`)
   } catch (err) {
     app.log.error(err)
     process.exit(1)
