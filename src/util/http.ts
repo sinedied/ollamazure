@@ -1,10 +1,10 @@
 export class HttpError extends Error {
   constructor(message: string, public status: number) {
-    super(`Http error: ${message}`);
+    super(message);
   }
 }
 
-export async function fetchApi(url: string, options: RequestInit, stream: boolean = false) {
+export async function fetchApi(url: string, options?: RequestInit, stream: boolean = false) {
   const response = await fetch(url, options);
   if (!response.ok) {
     throw new HttpError(response.statusText, response.status);
