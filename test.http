@@ -3,53 +3,65 @@
 # Download at: https://aka.ms/vscode/rest-client
 ##################################################################
 
-@api_host = http://localhost:4041
-
-POST http://localhost:11434/v1/completions
-Content-Type: application/json
-  
-{
-  "model": "phi3",
-  "prompt": "Once upon a time",
-  "max_tokens": 10
-}
+# Completion without streaming
+curl -X POST http://localhost:4041/openai/deployments/test/completions \
+  -H "Content-Type: application/json" \
+  -d '{ "prompt": "Once upon a time", "max_tokens": 20 }'
 
 ###
 
-# Completions
-POST {{api_host}}/openai/deployments/test/completions
-Content-Type: application/json
-
-{
-  "prompt": "Once upon a time",
-  "max_tokens": 50
-}
+# Completion with streaming
+curl -X POST http://localhost:4041/openai/deployments/test/completions \
+  -H "Content-Type: application/json" \
+  -d '{ "prompt": "Once upon a time", "max_tokens": 20, "stream": true }'
 
 ###
 
-# Chat completions
-POST {{api_host}}/openai/deployments/test/chat/completions
-Content-Type: application/json
+# Use deployment as model name (use `ollamazure -d`)
+curl -X POST http://localhost:4041/openai/deployments/mistral:v0.2/completions \
+  -H "Content-Type: application/json" \
+  -d '{ "prompt": "Once upon a time", "max_tokens": 20 }'
 
-{
-  "messages": [
-    {
-      "role": "system",
-      "content": "You are a helpful assistant."
-    },
-    {
-      "role": "user",
-      "content": "Say hello in French, Japanese, and Spanish."
-    }
-  ]
-}
+###
+
+# Chat completion without streaming
+curl -X POST http://localhost:4041/openai/deployments/test/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant."
+      },
+      {
+        "role": "user",
+        "content": "Say hello in French, Japanese, and Spanish."
+      }
+    ]
+  }'
+
+###
+
+# Chat completions wit streaming
+curl -X POST http://localhost:4041/openai/deployments/test/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant."
+      },
+      {
+        "role": "user",
+        "content": "Say hello in French, Japanese, and Spanish."
+      }
+    ],
+    "stream": true
+  }'
 
 ###
 
 # Embeddings
-POST {{api_host}}/openai/deployments/test/embeddings
-Content-Type: application/json
-
-{
-  "input": "Once upon a time"
-}
+curl -X POST http://localhost:4041/openai/deployments/test/embeddings \
+  -H "Content-Type: application/json" \
+  -d '{ "input": "Once upon a time" }'
