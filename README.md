@@ -48,7 +48,7 @@ By default, [`phi3`](https://ollama.com/library/phi3) is used as the model for c
 
 ### Configuration options
 
-```bash
+```txt
 ollamazure --help
 Usage: ollamazure [options]
 
