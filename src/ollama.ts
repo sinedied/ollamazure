@@ -1,32 +1,35 @@
-import { FastifyRequest } from "fastify";
-import { CliOptions, askForConfirmation, fetchApi, runCommand } from "./index.js";
-import {EventSourceParserStream} from 'eventsource-parser/stream'
-
-
+import { type FastifyRequest } from 'fastify';
+import { EventSourceParserStream } from 'eventsource-parser/stream';
+import { type CliOptions, askForConfirmation, fetchApi, runCommand } from './index.js';
 
 export async function getOllamaCompletion(request: FastifyRequest, options: CliOptions) {
-    const { ollamaUrl, model } = options;
-    const { deployment } = request.params as any;
-    const { stream } = request.body as any;
+  const { ollamaUrl, model } = options;
+  const { deployment } = request.params as any;
+  const { stream } = request.body as any;
 
-    // Convert completion request to chat request
-    const query = { ...request.body as any };
-    query.messages = [{ role: 'user', content: query.prompt }];
-    delete query.prompt;
+  // Convert completion request to chat request
+  const query = { ...(request.body as any) };
+  query.messages = [{ role: 'user', content: query.prompt }];
+  delete query.prompt;
 
-    const result = await fetchApi(`${ollamaUrl}/v1/chat/completions`, {
+  const result = await fetchApi(
+    `${ollamaUrl}/v1/chat/completions`,
+    {
       method: 'POST',
       body: JSON.stringify({
         ...query,
-        model: options.useDeployment ? deployment : model,
+        model: options.useDeployment ? deployment : model
       })
-    }, stream);
+    },
+    stream
+  );
 
-    if (stream) {
-      const eventStream = (result as ReadableStream)
-        .pipeThrough(new TextDecoderStream())
-        .pipeThrough(new EventSourceParserStream())
-        .pipeThrough(new TransformStream({
+  if (stream) {
+    const eventStream = (result as ReadableStream)
+      .pipeThrough(new TextDecoderStream())
+      .pipeThrough(new EventSourceParserStream())
+      .pipeThrough(
+        new TransformStream({
           transform(chunk, controller) {
             let { data } = chunk;
             if (data !== `[DONE]`) {
@@ -34,13 +37,15 @@ export async function getOllamaCompletion(request: FastifyRequest, options: CliO
               const completion = createCompletionFromChat(json, true);
               data = JSON.stringify(completion);
             }
+
             controller.enqueue(`data: ${data}\n\n`);
           }
-        }));
-      return eventStream;
-    }
+        })
+      );
+    return eventStream;
+  }
 
-    return createCompletionFromChat(result);
+  return createCompletionFromChat(result);
 }
 
 export async function getOllamaChatCompletion(request: FastifyRequest, options: CliOptions) {
@@ -48,13 +53,17 @@ export async function getOllamaChatCompletion(request: FastifyRequest, options: 
   const { deployment } = request.params as any;
   const { stream } = request.body as any;
 
-  return await fetchApi(`${ollamaUrl}/v1/chat/completions`, {
-    method: 'POST',
-    body: JSON.stringify({
-      ...request.body as any,
-      model: options.useDeployment ? deployment : model,
-    })
-  }, stream);
+  return fetchApi(
+    `${ollamaUrl}/v1/chat/completions`,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        ...(request.body as any),
+        model: options.useDeployment ? deployment : model
+      })
+    },
+    stream
+  );
 }
 
 export async function getOllamaEmbeddings(request: FastifyRequest, options: CliOptions) {
@@ -66,7 +75,7 @@ export async function getOllamaEmbeddings(request: FastifyRequest, options: CliO
     method: 'POST',
     body: JSON.stringify({
       prompt: input,
-      model: options.useDeployment ? deployment : embeddings,
+      model: options.useDeployment ? deployment : embeddings
     })
   });
 
@@ -75,14 +84,19 @@ export async function getOllamaEmbeddings(request: FastifyRequest, options: CliO
 
 export async function checkOllamaModels(options: CliOptions) {
   const { ollamaUrl } = options;
-  const result = await fetchApi(`${ollamaUrl}/api/tags`) as Record<string, any>;
+  const result = (await fetchApi(`${ollamaUrl}/api/tags`)) as Record<string, any>;
 
-  const hasModel = result.models.some((model: any) => model.name === options.model || model.name === `${options.model}:latest`);
-  const hasEmbeddings = result.models.some((model: any) => model.name === options.embeddings || model.name === `${options.embeddings}:latest`);
+  const hasModel = result.models.some(
+    (model: any) => model.name === options.model || model.name === `${options.model}:latest`
+  );
+  const hasEmbeddings = result.models.some(
+    (model: any) => model.name === options.embeddings || model.name === `${options.embeddings}:latest`
+  );
 
   if (!hasModel) {
     await askForModelDownload(options.model, options.yes);
   }
+
   if (!hasEmbeddings) {
     await askForModelDownload(options.embeddings, options.yes);
   }
@@ -90,13 +104,14 @@ export async function checkOllamaModels(options: CliOptions) {
   return result;
 }
 
-async function askForModelDownload(model: string, confirm: boolean = false) {
+async function askForModelDownload(model: string, confirm = false) {
   confirm ||= await askForConfirmation(`Model "${model}" not found. Do you want to download it?`);
   if (!confirm) {
     throw new Error(`Model "${model}" is not available.\nPlease run "ollama pull ${model}" to download it.`);
   }
+
   try {
-    console.info(`Downloading model "${model}"...`)
+    console.info(`Downloading model "${model}"...`);
     await runCommand(`ollama pull ${model}`);
   } catch (error_) {
     const error = error_ as Error;
@@ -104,7 +119,7 @@ async function askForModelDownload(model: string, confirm: boolean = false) {
   }
 }
 
-function createCompletionFromChat(result: any, chunk: boolean = false) {
+function createCompletionFromChat(result: any, chunk = false) {
   return {
     id: result.id.replace('chatcmpl-', 'cmpl-'),
     object: 'text_completion',
@@ -115,6 +130,7 @@ function createCompletionFromChat(result: any, chunk: boolean = false) {
         index: 0,
         text: chunk ? result.choices[0].delta.content : result.choices[0].message.content,
         logprobs: null,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         finish_reason: result.choices[0].finish_reason
       }
     ]
@@ -131,6 +147,6 @@ function createEmbeddingsFromOllama(result: any) {
         embedding: result.embedding,
         index: 0
       }
-    ],
+    ]
   };
 }

@@ -6,7 +6,7 @@ import { program } from 'commander';
 import chalk from 'chalk';
 import { getPackageJson } from './util/index.js';
 import { DEFAULT_EMBEDDINGS_MODEL, DEFAULT_MODEL, DEFAULT_PORT, OLLAMA_BASE_URL } from './constants.js';
-import { CliOptions } from './options.js';
+import { type CliOptions } from './options.js';
 import { startServer } from './server.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -20,14 +20,14 @@ export async function run(arguments_: string[] = process.argv) {
 
   program
     .name(package_.name)
-    .description("Emulates Azure OpenAI API using Ollama and local models.")
+    .description('Emulates Azure OpenAI API using Ollama and local models.')
     .option('--verbose', 'show detailed logs')
     .option('-y, --yes', 'do not ask for confirmation', false)
     .option('-m, --model <name>', 'model to use for chat and text completions', DEFAULT_MODEL)
     .option('-e, --embeddings <name>', 'model to use for embeddings', DEFAULT_EMBEDDINGS_MODEL)
     .option('-d, --use-deployment', 'use deployment name as model name', false)
     .option('-h, --host <ip>', 'host to bind to', 'localhost')
-    .option('-p, --port <number>', 'port to use', parseFloat, DEFAULT_PORT)
+    .option('-p, --port <number>', 'port to use', Number.parseFloat, DEFAULT_PORT)
     .option('-o, --ollama-url <number>', 'ollama base url', OLLAMA_BASE_URL)
     .version(package_.version, '-v, --version', 'show the current version')
     .helpCommand(false)

@@ -70,7 +70,12 @@
     "prettier": true,
     "envs": [
       "node"
-    ]
+    ],
+    "rules": {
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/no-unsafe-call": "off"
+    }
   },
   "engines": {
     "node": ">=20.0.0",
