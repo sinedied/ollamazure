@@ -33,6 +33,7 @@
   "devDependencies": {
     "@types/debug": "^4.1.12",
     "@types/node": "^20.14.1",
+    "ollama": "^0.5.2",
     "openai": "^4.52.3",
     "semantic-release": "^24.0.0",
     "semantic-release-npm-github": "^5.0.0",
@@ -72,9 +73,7 @@
       "node"
     ],
     "rules": {
-      "@typescript-eslint/no-unsafe-assignment": "off",
-      "@typescript-eslint/no-unsafe-argument": "off",
-      "@typescript-eslint/no-unsafe-call": "off"
+      "@typescript-eslint/no-unsafe-assignment": "off"
     }
   },
   "engines": {

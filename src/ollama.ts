@@ -1,23 +1,38 @@
 import { type FastifyRequest } from 'fastify';
 import { EventSourceParserStream } from 'eventsource-parser/stream';
+import { type EmbeddingsResponse, type ListResponse } from 'ollama';
+import type OpenAI from 'openai';
 import { type CliOptions, askForConfirmation, fetchApi, runCommand } from './index.js';
+
+type OpenAiCompletion = OpenAI.Completions.Completion;
+type OpenAiCompletionRequest = OpenAI.Completions.CompletionCreateParams;
+type OpenAiEmbeddings = OpenAI.Embeddings.CreateEmbeddingResponse;
+type OpenAiEmbeddingsRequest = OpenAI.Embeddings.EmbeddingCreateParams;
+type OpenAiChatCompletion = OpenAI.Chat.ChatCompletion;
+type OpenAiChatCompletionRequest = OpenAI.Chat.ChatCompletionCreateParams;
+type OpenAiChatCompletionChunk = OpenAI.Chat.ChatCompletionChunk;
 
 export async function getOllamaCompletion(request: FastifyRequest, options: CliOptions) {
   const { ollamaUrl, model } = options;
   const { deployment } = request.params as any;
-  const { stream } = request.body as any;
+  const body = request.body as OpenAiCompletionRequest;
+  const stream = Boolean(body.stream);
 
   // Convert completion request to chat request
-  const query = { ...(request.body as any) };
-  query.messages = [{ role: 'user', content: query.prompt }];
-  delete query.prompt;
+  const completionRequest = { ...body };
+  const messages = [{ role: 'user', content: completionRequest.prompt }];
+  const chatRequest = {
+    ...completionRequest,
+    prompt: undefined,
+    messages
+  };
 
   const result = await fetchApi(
     `${ollamaUrl}/v1/chat/completions`,
     {
       method: 'POST',
       body: JSON.stringify({
-        ...query,
+        ...chatRequest,
         model: options.useDeployment ? deployment : model
       })
     },
@@ -34,7 +49,7 @@ export async function getOllamaCompletion(request: FastifyRequest, options: CliO
             let { data } = chunk;
             if (data !== `[DONE]`) {
               const json = JSON.parse(data);
-              const completion = createCompletionFromChat(json, true);
+              const completion = createCompletionFromChat(json as OpenAiChatCompletionChunk, true);
               data = JSON.stringify(completion);
             }
 
@@ -45,20 +60,21 @@ export async function getOllamaCompletion(request: FastifyRequest, options: CliO
     return eventStream;
   }
 
-  return createCompletionFromChat(result);
+  return createCompletionFromChat(result as OpenAiChatCompletion);
 }
 
 export async function getOllamaChatCompletion(request: FastifyRequest, options: CliOptions) {
   const { ollamaUrl, model } = options;
   const { deployment } = request.params as any;
-  const { stream } = request.body as any;
+  const body = request.body as OpenAiChatCompletionRequest;
+  const stream = Boolean(body.stream);
 
   return fetchApi(
     `${ollamaUrl}/v1/chat/completions`,
     {
       method: 'POST',
       body: JSON.stringify({
-        ...(request.body as any),
+        ...body,
         model: options.useDeployment ? deployment : model
       })
     },
@@ -69,28 +85,30 @@ export async function getOllamaChatCompletion(request: FastifyRequest, options: 
 export async function getOllamaEmbeddings(request: FastifyRequest, options: CliOptions) {
   const { ollamaUrl, embeddings } = options;
   const { deployment } = request.params as any;
-  const { input } = request.body as any;
+  const body = request.body as OpenAiEmbeddingsRequest;
+  const { input } = body;
+  const model = options.useDeployment ? deployment : embeddings;
 
-  const result = await fetchApi(`${ollamaUrl}/api/embeddings`, {
+  const result = (await fetchApi(`${ollamaUrl}/api/embeddings`, {
     method: 'POST',
     body: JSON.stringify({
       prompt: input,
-      model: options.useDeployment ? deployment : embeddings
+      model
     })
-  });
+  })) as EmbeddingsResponse;
 
-  return createEmbeddingsFromOllama(result);
+  return createEmbeddingsFromOllama(model as string, result);
 }
 
 export async function checkOllamaModels(options: CliOptions) {
   const { ollamaUrl } = options;
-  const result = (await fetchApi(`${ollamaUrl}/api/tags`)) as Record<string, any>;
+  const result = (await fetchApi(`${ollamaUrl}/api/tags`)) as ListResponse;
 
   const hasModel = result.models.some(
-    (model: any) => model.name === options.model || model.name === `${options.model}:latest`
+    (model) => model.name === options.model || model.name === `${options.model}:latest`
   );
   const hasEmbeddings = result.models.some(
-    (model: any) => model.name === options.embeddings || model.name === `${options.embeddings}:latest`
+    (model) => model.name === options.embeddings || model.name === `${options.embeddings}:latest`
   );
 
   if (!hasModel) {
@@ -119,7 +137,10 @@ async function askForModelDownload(model: string, confirm = false) {
   }
 }
 
-function createCompletionFromChat(result: any, chunk = false) {
+function createCompletionFromChat(
+  result: OpenAiChatCompletion | OpenAiChatCompletionChunk,
+  chunk = false
+): OpenAiCompletion {
   return {
     id: result.id.replace('chatcmpl-', 'cmpl-'),
     object: 'text_completion',
@@ -128,25 +149,34 @@ function createCompletionFromChat(result: any, chunk = false) {
     choices: [
       {
         index: 0,
-        text: chunk ? result.choices[0].delta.content : result.choices[0].message.content,
+        text: chunk
+          ? (result as OpenAiChatCompletionChunk).choices[0].delta.content!
+          : (result as OpenAiChatCompletion).choices[0].message.content!,
         logprobs: null,
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        finish_reason: result.choices[0].finish_reason
+        finish_reason: result.choices[0].finish_reason as any
       }
     ]
   };
 }
 
-function createEmbeddingsFromOllama(result: any) {
+function createEmbeddingsFromOllama(model: string, result: EmbeddingsResponse): OpenAiEmbeddings {
   return {
     object: 'list',
-    model: result.model,
+    model,
     data: [
       {
         object: 'embedding',
         embedding: result.embedding,
         index: 0
       }
-    ]
+    ],
+    // Currently unsupported by Ollama API
+    usage: {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      prompt_tokens: 0,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      total_tokens: 0
+    }
   };
 }
