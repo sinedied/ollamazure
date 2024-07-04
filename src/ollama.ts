@@ -147,7 +147,7 @@ async function askForModelDownload(model: string, confirm = false) {
 
   try {
     console.info(`Downloading model "${model}"...`);
-    await runCommand(`ollama pull ${model}`);
+    runCommand(`ollama pull ${model}`);
   } catch (error_) {
     const error = error_ as Error;
     throw new Error(`Failed to download model "${model}".\n${error.message}`);

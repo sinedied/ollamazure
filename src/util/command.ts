@@ -1,7 +1,5 @@
-import { promisify } from 'node:util';
-import { exec } from 'node:child_process';
+import { execSync } from 'node:child_process';
 
-export async function runCommand(command: string): Promise<string> {
-  const result = await promisify(exec)(command);
-  return result.stdout.toString();
+export function runCommand(command: string) {
+  execSync(command, { stdio: 'inherit', encoding: 'utf8' });
 }
