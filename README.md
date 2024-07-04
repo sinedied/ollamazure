@@ -21,6 +21,8 @@ TODO: create image with SDKs calling ollamazure directing to Ollama or Azure Ope
 
 </div>
 
+---
+
 Emulates [Azure OpenAI](https://learn.microsoft.com/azure/ai-services/openai/overview) API on your local machine using [Ollama](https://ollama.com) and open-source models.
 
 ## Usage
