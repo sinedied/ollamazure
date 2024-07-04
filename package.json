@@ -28,12 +28,14 @@
     "commander": "^12.1.0",
     "debug": "^4.3.5",
     "eventsource-parser": "^1.1.2",
-    "fastify": "^4.28.1"
+    "fastify": "^4.28.1",
+    "update-notifier": "^7.0.0"
   },
   "devDependencies": {
     "@langchain/openai": "^0.2.1",
     "@types/debug": "^4.1.12",
     "@types/node": "^20.14.1",
+    "@types/update-notifier": "^6.0.8",
     "llamaindex": "^0.4.12",
     "ollama": "^0.5.2",
     "openai": "^4.52.3",

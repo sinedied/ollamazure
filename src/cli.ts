@@ -2,6 +2,7 @@ import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import { join, dirname } from 'node:path';
 import debug from 'debug';
+import updateNotifier from 'update-notifier';
 import { program } from 'commander';
 import chalk from 'chalk';
 import { getPackageJson } from './util/index.js';
@@ -13,6 +14,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export async function run(arguments_: string[] = process.argv) {
   const package_ = await getPackageJson(join(__dirname, '..'));
+
+  updateNotifier({ pkg: package_ }).notify({ isGlobal: true });
 
   if (arguments_.includes('--verbose')) {
     debug.enable('*');
