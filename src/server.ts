@@ -60,6 +60,7 @@ export async function startServer(options: CliOptions) {
     await app.listen({ port: options.port });
 
     console.log(`Azure OpenAI emulator started on http://${options.host}:${options.port}`);
+    console.log('Press CTRL+C to quit.');
   } catch (error_) {
     const error = error_ as Error;
     console.error(error.message);
