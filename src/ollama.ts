@@ -89,13 +89,18 @@ export async function getOllamaEmbeddings(request: FastifyRequest, options: CliO
   const { input } = body;
   const model = options.useDeployment ? deployment : embeddings;
 
-  const result = (await fetchApi(`${ollamaUrl}/api/embeddings`, {
-    method: 'POST',
-    body: JSON.stringify({
-      prompt: input,
-      model
-    })
-  })) as EmbeddingsResponse;
+  const getEmbeddings = async (input: string | number[]) =>
+    fetchApi(`${ollamaUrl}/api/embeddings`, {
+      method: 'POST',
+      body: JSON.stringify({
+        prompt: input,
+        model
+      })
+    }) as Promise<EmbeddingsResponse>;
+
+  const result = await (Array.isArray(input) && typeof input[0] !== 'number'
+    ? Promise.all(input.map(async (i) => getEmbeddings(i as string | number[])))
+    : getEmbeddings(input as string | number[]));
 
   return createEmbeddingsFromOllama(model as string, result);
 }
@@ -160,17 +165,19 @@ function createCompletionFromChat(
   };
 }
 
-function createEmbeddingsFromOllama(model: string, result: EmbeddingsResponse): OpenAiEmbeddings {
+function createEmbeddingsFromOllama(
+  model: string,
+  result: EmbeddingsResponse | EmbeddingsResponse[]
+): OpenAiEmbeddings {
+  result = Array.isArray(result) ? result : [result];
   return {
     object: 'list',
     model,
-    data: [
-      {
-        object: 'embedding',
-        embedding: result.embedding,
-        index: 0
-      }
-    ],
+    data: result.map((r) => ({
+      object: 'embedding',
+      embedding: r.embedding,
+      index: 0
+    })),
     // Currently unsupported by Ollama API
     usage: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
