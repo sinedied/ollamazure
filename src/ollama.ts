@@ -20,6 +20,9 @@ export async function getOllamaCompletion(request: FastifyRequest, options: CliO
 
   // Convert completion request to chat request
   const completionRequest = { ...body };
+  // TODO: properly handle prompt array
+  completionRequest.prompt =
+    typeof completionRequest.prompt?.[0] === 'string' ? completionRequest.prompt[0] : completionRequest.prompt;
   const messages = [{ role: 'user', content: completionRequest.prompt }];
   const chatRequest = {
     ...completionRequest,
