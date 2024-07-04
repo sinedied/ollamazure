@@ -3,9 +3,11 @@ import createDebug from 'debug';
 import { fetchApi } from './util/index.js';
 import { CliOptions } from './options.js';
 
-const debug = createDebug('start');
+const debug = createDebug('server');
 
 export async function startServer(options: CliOptions) {
+  debug('Starting server with:', { options });
+
   const app = fastify();
   const { ollamaUrl, model, embeddings } = options;
   

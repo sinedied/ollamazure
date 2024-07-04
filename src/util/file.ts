@@ -11,28 +11,3 @@ export async function getPackageJson(basePath: string): Promise<PackageJson> {
   const package_ = JSON.parse(file) as PackageJson;
   return package_;
 }
-
-export async function pathExists(path: string) {
-  try {
-    await fs.access(path);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-export async function ensureDirectory(path: string) {
-  await fs.mkdir(path, { recursive: true });
-}
-
-export async function readFile(file: string) {
-  return fs.readFile(file, 'utf8');
-}
-
-export function removeFirstPosixPathSegment(filePath: string): string {
-  return filePath.split('/').slice(1).join('/');
-}
-
-export function convertPathToPosix(filePath: string): string {
-  return filePath.replaceAll('\\', '/');
-}
