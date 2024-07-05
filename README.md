@@ -19,13 +19,16 @@
 
 </div>
 
-CLI tool that emulates [Azure OpenAI](https://learn.microsoft.com/azure/ai-services/openai/overview) API on your local machine using [Ollama](https://ollama.com) and open-source models.
-
 ## Overview
+
+**ollamazure** is a local server that emulates [Azure OpenAI](https://learn.microsoft.com/azure/ai-services/openai/overview) API on your local machine using [Ollama](https://ollama.com) and open-source models.
 
 Using this tool, you can run your own local server that emulates the Azure OpenAI API, allowing you to test your code locally without incurring costs or being rate-limited. This is especially useful for development and testing purposes, or when you need to work offline.
 
 By default, [`phi3`](https://ollama.com/library/phi3) is used as the model for completions, and [`all-minilm:l6-v2`](https://ollama.com/library/all-minilm:l6-v2) for embeddings. You can change these models using the [configuration options](#configuration-options).
+
+> [!NOTE]
+> This tool use different models than Azure OpenAI, so you should expect difference in results accuracy and performance. However, the API is compatible so you can use the same code to interact with it.
 
 ## Usage
 
