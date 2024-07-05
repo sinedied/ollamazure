@@ -15,7 +15,7 @@
 
 [Overview](#overview) • [Usage](#usage) • [Azure OpenAI compatibility](#azure-openai-compatibility) • [Sample code](#sample-code)
 
-![ollamazure architecture](./docs/images/architecture.drawio.png)
+<img src="./docs/images/architecture.drawio.png" alt="ollamazure architecture" align="center" width="600" />
 
 </div>
 
