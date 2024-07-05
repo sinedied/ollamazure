@@ -32,8 +32,6 @@ export async function getOllamaCompletion(request: FastifyRequest, options: CliO
     messages
   };
 
-  console.log(chatRequest);
-
   const result = await fetchApi(
     `${ollamaUrl}/v1/chat/completions`,
     {
