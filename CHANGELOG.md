@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/sinedied/ollamazure/compare/1.1.0...1.1.1) (2024-07-05)
+
+
+### Bug Fixes
+
+* remove extra log ([e5d6e71](https://github.com/sinedied/ollamazure/commit/e5d6e712b708a8bc870043c883a767a737e90132))
+
 # [1.1.0](https://github.com/sinedied/ollamazure/compare/1.0.0...1.1.0) (2024-07-05)
 
 
