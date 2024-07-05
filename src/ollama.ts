@@ -22,13 +22,17 @@ export async function getOllamaCompletion(request: FastifyRequest, options: CliO
   const completionRequest = { ...body };
   // TODO: properly handle prompt array
   completionRequest.prompt =
-    typeof completionRequest.prompt?.[0] === 'string' ? completionRequest.prompt[0] : completionRequest.prompt;
+    Array.isArray(completionRequest.prompt) && typeof completionRequest.prompt?.[0] === 'string'
+      ? completionRequest.prompt[0]
+      : completionRequest.prompt;
   const messages = [{ role: 'user', content: completionRequest.prompt }];
   const chatRequest = {
     ...completionRequest,
     prompt: undefined,
     messages
   };
+
+  console.log(chatRequest);
 
   const result = await fetchApi(
     `${ollamaUrl}/v1/chat/completions`,
