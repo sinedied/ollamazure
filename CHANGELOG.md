@@ -1,3 +1,15 @@
+# [1.1.0](https://github.com/sinedied/ollamazure/compare/1.0.0...1.1.0) (2024-07-05)
+
+
+### Bug Fixes
+
+* completion requests ([0ef6e08](https://github.com/sinedied/ollamazure/commit/0ef6e082366e833d3a51327dc4c2ecd9a6128c70))
+
+
+### Features
+
+* add python example ([22c08d1](https://github.com/sinedied/ollamazure/commit/22c08d1692170b3d6d44f038703fb88829e86e75))
+
 # 1.0.0 (2024-07-04)
 
 
