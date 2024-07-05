@@ -28,7 +28,7 @@ Using this tool, you can run your own local server that emulates the Azure OpenA
 By default, [`phi3`](https://ollama.com/library/phi3) is used as the model for completions, and [`all-minilm:l6-v2`](https://ollama.com/library/all-minilm:l6-v2) for embeddings. You can change these models using the [configuration options](#configuration-options).
 
 > [!NOTE]
-> This tool use different models than Azure OpenAI, so you should expect difference in results accuracy and performance. However, the API is compatible so you can use the same code to interact with it.
+> This tool use different models than Azure OpenAI, so you should expect differences in results accuracy and performance. However, the API is compatible so you can use the same code to interact with it.
 
 ## Usage
 
