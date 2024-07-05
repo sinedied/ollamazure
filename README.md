@@ -1,8 +1,8 @@
 <div align="center">
 
-<!-- <img src="./logo.png" alt="" align="center" height="64" /> -->
+<img src="./docs/images/ollamazure-logo.png" alt="" align="center" height="64" />
 
-# 🦙 ollamazure
+# ollamazure
 
 [![NPM version](https://img.shields.io/npm/v/ollamazure.svg?style=flat-square)](https://www.npmjs.com/package/ollamazure)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/sinedied/ollamazure/ci.yml?style=flat-square&label=Build)](https://github.com/sinedied/ollamazure/actions)
@@ -15,13 +15,9 @@
 
 [Overview](#overview) • [Usage](#usage) • [Azure OpenAI compatibility](#azure-openai-compatibility) • [Sample code](#sample-code)
 
-<!-- 
-TODO: create image with SDKs calling ollamazure directing to Ollama or Azure OpenAI
--->
+![ollamazure architecture](./docs/images/architecture.drawio.png)
 
 </div>
-
----
 
 Emulates [Azure OpenAI](https://learn.microsoft.com/azure/ai-services/openai/overview) API on your local machine using [Ollama](https://ollama.com) and open-source models.
 
