@@ -39,5 +39,5 @@ const embeddings = new AzureOpenAIEmbeddings({
   azureOpenAIApiEmbeddingsDeploymentName: 'text-embedding-ada-002'
 });
 
-const vector = await embeddings.embedQuery('Once upon a time');
-console.log(vector);
+const vectors = await embeddings.embedDocuments(['Once upon a time', 'The end.']);
+console.log(vectors);
