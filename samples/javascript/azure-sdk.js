@@ -30,5 +30,5 @@ const embeddings = await openai.embeddings.create({
 });
 
 for (const embedding of embeddings.data) {
-  console.log(embedding);
+  console.log(embedding.embedding.slice(0, 3));
 }

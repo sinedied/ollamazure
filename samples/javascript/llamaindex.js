@@ -34,4 +34,6 @@ const embeddings = new OpenAIEmbedding({
 
 const vectors = await embeddings.getTextEmbeddingsBatch(['Once upon a time', 'The end.']);
 
-console.log(vectors);
+for (const vector of vectors) {
+  console.log(vector.slice(0, 3));
+}

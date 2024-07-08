@@ -12,6 +12,7 @@ const model = new AzureChatOpenAI({
 });
 
 const completion = await model.invoke([{ type: 'human', content: 'Say hello!' }]);
+
 console.log(completion.content);
 
 // Text completion
@@ -26,6 +27,7 @@ const llm = new AzureOpenAI({
 });
 
 const text = await llm.invoke('Say hello in French: ');
+
 console.log(text);
 
 // Embeddings
@@ -40,4 +42,7 @@ const embeddings = new AzureOpenAIEmbeddings({
 });
 
 const vectors = await embeddings.embedDocuments(['Once upon a time', 'The end.']);
-console.log(vectors);
+
+for (const vector of vectors) {
+  console.log(vector.slice(0, 3));
+}
