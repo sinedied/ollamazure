@@ -91,3 +91,10 @@ curl -X POST http://localhost:4041/openai/deployments/test/chat/completions \
 curl -X POST http://localhost:4041/openai/deployments/test/embeddings \
   -H "Content-Type: application/json" \
   -d '{ "input": "Once upon a time" }'
+
+###
+
+# Embeddings multiple documents
+curl -X POST http://localhost:4041/openai/deployments/test/embeddings \
+  -H "Content-Type: application/json" \
+  -d '{ "input": ["Once upon a time", "The end."] }'
