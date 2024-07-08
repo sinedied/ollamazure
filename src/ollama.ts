@@ -175,7 +175,8 @@ function createCompletionFromChat(
         // eslint-disable-next-line @typescript-eslint/naming-convention
         finish_reason: result.choices[0].finish_reason as any
       }
-    ]
+    ],
+    usage: result.usage
   };
 }
 
