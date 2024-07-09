@@ -28,11 +28,11 @@
   },
 
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "npm install && npm install -g fuzz-run",
+  "postCreateCommand": "npm install && npm install -g fuzz-run && npm run build && npm i -g .",
 
   // Set minimal host requirements for the container.
   "hostRequirements": {
-    "memory": "8gb"
+    "memory": "16gb"
   }
   
   // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
