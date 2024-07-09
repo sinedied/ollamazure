@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/sinedied/ollamazure/compare/1.2.0...1.3.0) (2024-07-09)
+
+
+### Features
+
+* detect ollama version and run ollama server if not started ([27f9884](https://github.com/sinedied/ollamazure/commit/27f9884ddb3eedcdabd33042851ad8e4d860de66))
+
 # [1.2.0](https://github.com/sinedied/ollamazure/compare/1.1.1...1.2.0) (2024-07-09)
 
 
