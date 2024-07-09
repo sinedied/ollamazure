@@ -36,4 +36,5 @@ embedding = openai.embeddings.create(
     input=["Once upon a time", "The end."]
 )
 
-print(embedding.data[0].embedding)
+for embedding in embedding.data:
+    print(embedding.embedding[:3])
