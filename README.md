@@ -34,24 +34,30 @@ By default, [`phi3`](https://ollama.com/library/phi3) is used as the model for c
 
 You need [Node.js v20+](https://nodejs.org) and [Ollama](https://ollama.com) installed on your machine to use this tool.
 
-You can either install the CLI globally:
-
-```bash
-npm install -g ollamazure
-```
-
-Or use it directly with `npx` without installing it:
+You can start the emulator directly using `npx` without installing it:
 
 ```bash
 npx ollamazure
 ```
 
-> [!TIP]
-> When installed locally, you can run the CLI using either `ollamazure` or `oaz` for short.
-
 Once the server is started, leave it open in a terminal window and you can use the Azure OpenAI API to interact with it. You can find sample code for different languages and frameworks in the [sample code](#sample-code) section.
 
 For example, if you have an existing project that uses the Azure OpenAI SDK, you can point it to your local server by setting the `AZURE_OPENAI_ENDPOINT` environment variable to `http://localhost:4041` without changing the rest of your code.
+
+### Installation
+
+You can also install the CLI globally:
+
+```bash
+npm install -g ollamazure
+```
+
+Then run it with:
+
+```bash
+ollamazure
+# or use the shorter alias `oaz`
+```
 
 ### Configuration options
 
