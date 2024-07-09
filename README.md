@@ -46,13 +46,11 @@ For example, if you have an existing project that uses the Azure OpenAI SDK, you
 
 ### Installation
 
-You can also install the CLI globally:
-
 ```bash
 npm install -g ollamazure
 ```
 
-Then run it with:
+Once the installation is completed, start the emulator by running the following command in a terminal:
 
 ```bash
 ollamazure
