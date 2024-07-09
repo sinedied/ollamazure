@@ -188,3 +188,67 @@ If you're using managed identity, this will work as well unless you're in a loca
 
 </details>
 
+### Python
+
+<details>
+<summary><b>Azure OpenAI SDK</b></summary><br>
+
+```python
+from openai import AzureOpenAI
+
+openai = AzureOpenAI(
+    # This is where you point to your local server
+    azure_endpoint="http://localhost:4041",
+
+    # Parameters below must be provided but are not used by the local server
+    # api_key="123456",
+    api_version="2024-02-01"
+)
+
+# Chat completion
+chat_completion = openai.chat.completions.create(
+    # Model must be provided but is not used by the local server
+    model="gpt-4",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Say hello!"}
+    ]
+)
+
+print(chat_completion.choices[0].message.content)
+```
+
+> [!TIP]
+> Alternatively, you can set the `AZURE_OPENAI_ENDPOINT` environment variable to `http://localhost:4041` instead of passing it to the constructor. Everything else will work the same.
+
+If you're using managed identity, this will work as well unless you're in a local container. In that case, you can use a dummy function `lambda:"1"` for the the `azure_ad_token_provider` parameter in the constructor.
+
+</details>
+
+<details>
+<summary><b>LangChain</b></summary><br>
+
+```python
+from langchain_openai import AzureChatOpenAI
+
+# Chat completion
+model = AzureChatOpenAI(
+    # This is where you point to your local server
+    azure_endpoint="http://localhost:4041",
+
+    # Parameters below must be provided but are not used by the local server
+    api_key="123456",
+    api_version="2024-02-01",
+    azure_deployment="gpt-4"
+)
+
+chat_completion = model.invoke([{"type": "human", "content": "Say hello!"}])
+print(chat_completion.content)
+```
+
+> [!TIP]
+> Alternatively, you can set the `AZURE_OPENAI_ENDPOINT` environment variable to `http://localhost:4041` instead of passing it to the constructor. Everything else will work the same.
+
+If you're using managed identity, this will work as well unless you're in a local container. In that case, you can use a dummy function `lambda:"1"` for the the `azure_ad_token_provider` parameter in the constructor.
+
+</details>
