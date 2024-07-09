@@ -21,6 +21,6 @@ __pycache__
 nupkg/
 *.suo
 *.user
-[Bb]in/
+samples/csharp/**/[Bb]in/
 [Oo]bj/
 [Oo]ut/
