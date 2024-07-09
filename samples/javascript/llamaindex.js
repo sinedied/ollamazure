@@ -28,7 +28,7 @@ const embeddings = new OpenAIEmbedding({
     // Parameters below must be provided but are not used by the local server
     apiKey: '123456',
     apiVersion: '2024-02-01',
-    deployment: 'gpt-4'
+    deployment: 'text-embedding-ada-002'
   }
 });
 
