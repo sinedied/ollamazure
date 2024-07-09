@@ -93,6 +93,7 @@ export async function getOllamaEmbeddings(request: FastifyRequest, options: CliO
   const body = request.body as OpenAiEmbeddingsRequest;
   const { input } = body;
   const model = options.useDeployment ? deployment : embeddings;
+  const useBase64 = body.encoding_format?.toLowerCase() === 'base64';
 
   const getEmbeddings = async (input: string | number[]) =>
     fetchApi(`${ollamaUrl}/api/embeddings`, {
@@ -107,7 +108,7 @@ export async function getOllamaEmbeddings(request: FastifyRequest, options: CliO
     ? Promise.all(input.map(async (i) => getEmbeddings(i as string | number[])))
     : getEmbeddings(input as string | number[]));
 
-  return createEmbeddingsFromOllama(model as string, result);
+  return createEmbeddingsFromOllama(model as string, result, useBase64);
 }
 
 export async function checkOllamaModels(options: CliOptions) {
@@ -182,7 +183,8 @@ function createCompletionFromChat(
 
 function createEmbeddingsFromOllama(
   model: string,
-  result: EmbeddingsResponse | EmbeddingsResponse[]
+  result: EmbeddingsResponse | EmbeddingsResponse[],
+  useBase64 = false
 ): OpenAiEmbeddings {
   result = Array.isArray(result) ? result : [result];
   return {
@@ -190,15 +192,21 @@ function createEmbeddingsFromOllama(
     model,
     data: result.map((r) => ({
       object: 'embedding',
-      embedding: r.embedding,
+      // There's a type issue with OpenAI embeddings response
+      // base64 string embeddings are not supported so we need to cast it
+      embedding: useBase64 ? (convertToBase64(r.embedding) as any) : r.embedding,
       index: 0
     })),
     // Currently unsupported by Ollama API
     usage: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      prompt_tokens: 0,
+      prompt_tokens: 1,
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      total_tokens: 0
+      total_tokens: 1
     }
   };
+}
+
+function convertToBase64(data: number[]) {
+  return Buffer.from(new Float32Array(data).buffer).toString('base64');
 }
