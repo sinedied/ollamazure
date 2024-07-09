@@ -278,3 +278,28 @@ Alternatively, you can set the `AZURE_OPENAI_ENDPOINT` environment variable to `
 If you're using managed identity, this will work as well unless you're in a local container. In that case, you can use a dummy function `lambda:"1"` for the the `azure_ad_token_provider` parameter in the constructor.
 
 </details>
+
+### C#
+
+<details>
+<summary><b>Azure OpenAI SDK</b></summary><br>
+
+```csharp
+using Azure;
+using Azure.AI.OpenAI;
+using OpenAI.Chat;
+
+// Chat completion
+AzureOpenAIClient azureClient = new(
+    new Uri("http://localhost:4041"),
+    // Must be provided but are not used by the local server
+    new AzureKeyCredential("123456"));
+
+ChatClient chatClient = azureClient.GetChatClient("gpt-4");
+
+ChatCompletion completion = chatClient.CompleteChat([new UserChatMessage("Say hello!")]);
+
+Console.WriteLine(completion.Content[0].Text);
+```
+
+</details>
