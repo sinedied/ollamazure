@@ -1,3 +1,16 @@
+# [1.2.0](https://github.com/sinedied/ollamazure/compare/1.1.1...1.2.0) (2024-07-09)
+
+
+### Bug Fixes
+
+* missing usage property in text completions ([ab4d637](https://github.com/sinedied/ollamazure/commit/ab4d6377200bc90b48abe7131e75d7fb07890c1b))
+
+
+### Features
+
+* add support for base64 embeddings format ([beb14d2](https://github.com/sinedied/ollamazure/commit/beb14d2a3fd3738eac0f78d52afb4bbbda019822))
+* add support for token input for embeddings ([7dde843](https://github.com/sinedied/ollamazure/commit/7dde84309f6980c6ee518616a1a67c535b8dfa26))
+
 ## [1.1.1](https://github.com/sinedied/ollamazure/compare/1.1.0...1.1.1) (2024-07-05)
 
 
