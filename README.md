@@ -93,7 +93,11 @@ Unimplemented features are currently not supported by Ollama, but are being work
 
 See all code examples in the [samples](samples) folder.
 
-### Azure OpenAI SDK
+### JavaScript
+
+<details>
+<summary><b>Azure OpenAI SDK</b></summary><br>
+
 
 ```typescript
 import { AzureOpenAI } from 'openai';
@@ -120,7 +124,10 @@ console.log('Chat completion: ' + chatCompletion.choices[0]!.message?.content);
 
 If you're using managed identity, this will work as well unless you're in a local container. In that case, you can use a dummy function `() => '1'` for the the `azureADTokenProvider` parameter in the constructor.
 
-### LangChain.js
+</details>
+
+<details>
+<summary><b>LangChain.js</b></summary><br>
 
 ```typescript
 import { AzureChatOpenAI } from '@langchain/openai';
@@ -145,7 +152,11 @@ console.log(completion.content);
 
 If you're using managed identity this will work the same unless you're in a local container. In that case, you can use a dummy function `() => '1'` for the the `azureADTokenProvider` parameter in the constructor.
 
-### LlamaIndex.TS
+</details>
+
+<details>
+<summary><b>LlamaIndex.TS</b></summary><br>
+
 
 ```typescript
 import { OpenAI, OpenAIEmbedding } from "llamaindex";
@@ -174,3 +185,6 @@ console.log(chatCompletion.message.content);
 > Alternatively, you can set the `AZURE_OPENAI_ENDPOINT` environment variable to `http://localhost:4041` instead of passing it to the constructor. Everything else will work the same.
 
 If you're using managed identity, this will work as well unless you're in a local container. In that case, you can use a dummy function `() => '1'` for the the `azureADTokenProvider` parameter in the constructor.
+
+</details>
+
