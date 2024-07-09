@@ -2,7 +2,14 @@ import process from 'node:process';
 import fastify from 'fastify';
 import createDebug from 'debug';
 import { type CliOptions } from './options.js';
-import { checkOllamaModels, getOllamaChatCompletion, getOllamaCompletion, getOllamaEmbeddings } from './ollama.js';
+import {
+  checkOllamaModels,
+  checkOllamaVersion,
+  getOllamaChatCompletion,
+  getOllamaCompletion,
+  getOllamaEmbeddings,
+  startOllamaServer
+} from './ollama.js';
 import { type HttpError } from './util/index.js';
 
 const debug = createDebug('server');
@@ -56,6 +63,8 @@ export async function startServer(options: CliOptions) {
   });
 
   try {
+    await checkOllamaVersion(options);
+    await startOllamaServer(options);
     await checkOllamaModels(options);
     await app.listen({ port: options.port });
 

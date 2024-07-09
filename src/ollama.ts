@@ -1,13 +1,16 @@
 import { type FastifyRequest } from 'fastify';
+import createDebug from 'debug';
 import { type EmbeddingsResponse, type ListResponse } from 'ollama';
 import type OpenAI from 'openai';
 import { type CliOptions } from './options.js';
-import { askForConfirmation, fetchApi, runCommand } from './util/index.js';
+import { askForConfirmation, fetchApi, runCommand, runCommandSync, runInBackground } from './util/index.js';
 import { decodeTokens } from './tokenizer.js';
 
 type OpenAiEmbeddings = OpenAI.Embeddings.CreateEmbeddingResponse;
 type OpenAiEmbeddingsRequest = OpenAI.Embeddings.EmbeddingCreateParams;
 type OpenAiChatCompletionRequest = OpenAI.Chat.ChatCompletionCreateParams;
+
+const debug = createDebug('ollama');
 
 export async function getOllamaCompletion(request: FastifyRequest, options: CliOptions) {
   const { ollamaUrl, model } = options;
@@ -69,6 +72,58 @@ export async function getOllamaEmbeddings(request: FastifyRequest, options: CliO
   return createEmbeddingsFromOllama(model as string, result, useBase64);
 }
 
+export async function checkOllamaVersion(options: CliOptions) {
+  let result: string;
+  try {
+    result = await runCommand('ollama --version');
+  } catch (error_) {
+    const error = error_ as Error;
+    debug(`Failed run "ollama" command: ${error?.message}`);
+    throw new Error(
+      `Could not check Ollama version.\n\n` +
+        `Make sure Ollama is installed.\n` +
+        `You can download it at http://ollama.com/download.`
+    );
+  }
+
+  const match = /\d+\.\d+\.\d+/.exec(result);
+  const version = match ? match[0] : '0.0.0';
+  debug('Ollama version:', version);
+
+  const [, minor] = version.split('.').map(Number);
+  if (minor < 2) {
+    throw new Error(
+      `Ollama version ${version} is not supported.\n\n` +
+        `Please upgrade to version 0.2.0 or higher.\n` +
+        `You can download it at http://ollama.com/download.`
+    );
+  }
+}
+
+export async function startOllamaServer(options: CliOptions) {
+  const { ollamaUrl } = options;
+  try {
+    await fetchApi(ollamaUrl, undefined, true);
+    debug('Ollama server is running');
+    return;
+  } catch {
+    debug('Ollama server not running, starting it up...');
+  }
+
+  try {
+    await runInBackground('ollama', ['start'], 'Listening on');
+    debug('Ollama server started');
+  } catch (error_) {
+    const error = error_ as Error;
+    debug(`Failed to start Ollama server: ${error?.message}`);
+    throw new Error(
+      `Could not start Ollama server.\n\n` +
+        `Make sure Ollama is installed or start it manually.\n` +
+        `You can download it at http://ollama.com/download.`
+    );
+  }
+}
+
 export async function checkOllamaModels(options: CliOptions) {
   const { ollamaUrl } = options;
   let result: ListResponse;
@@ -108,7 +163,7 @@ async function askForModelDownload(model: string, confirm = false) {
 
   try {
     console.info(`Downloading model "${model}"...`);
-    runCommand(`ollama pull ${model}`);
+    runCommandSync(`ollama pull ${model}`);
   } catch (error_) {
     const error = error_ as Error;
     throw new Error(`Failed to download model "${model}".\n${error.message}`);
