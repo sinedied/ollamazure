@@ -1,73 +1,31 @@
 import { type FastifyRequest } from 'fastify';
-import { EventSourceParserStream } from 'eventsource-parser/stream';
 import { type EmbeddingsResponse, type ListResponse } from 'ollama';
 import type OpenAI from 'openai';
 import { type CliOptions } from './options.js';
 import { askForConfirmation, fetchApi, runCommand } from './util/index.js';
 import { decodeTokens } from './tokenizer.js';
 
-type OpenAiCompletion = OpenAI.Completions.Completion;
-type OpenAiCompletionRequest = OpenAI.Completions.CompletionCreateParams;
 type OpenAiEmbeddings = OpenAI.Embeddings.CreateEmbeddingResponse;
 type OpenAiEmbeddingsRequest = OpenAI.Embeddings.EmbeddingCreateParams;
-type OpenAiChatCompletion = OpenAI.Chat.ChatCompletion;
 type OpenAiChatCompletionRequest = OpenAI.Chat.ChatCompletionCreateParams;
-type OpenAiChatCompletionChunk = OpenAI.Chat.ChatCompletionChunk;
 
 export async function getOllamaCompletion(request: FastifyRequest, options: CliOptions) {
   const { ollamaUrl, model } = options;
   const { deployment } = request.params as any;
-  const body = request.body as OpenAiCompletionRequest;
+  const body = request.body as OpenAiChatCompletionRequest;
   const stream = Boolean(body.stream);
 
-  // Convert completion request to chat request
-  const completionRequest = { ...body };
-  // TODO: properly handle prompt array
-  completionRequest.prompt =
-    Array.isArray(completionRequest.prompt) && typeof completionRequest.prompt?.[0] === 'string'
-      ? completionRequest.prompt[0]
-      : completionRequest.prompt;
-  const messages = [{ role: 'user', content: completionRequest.prompt }];
-  const chatRequest = {
-    ...completionRequest,
-    prompt: undefined,
-    messages
-  };
-
-  const result = await fetchApi(
-    `${ollamaUrl}/v1/chat/completions`,
+  return fetchApi(
+    `${ollamaUrl}/v1/completions`,
     {
       method: 'POST',
       body: JSON.stringify({
-        ...chatRequest,
+        ...body,
         model: options.useDeployment ? deployment : model
       })
     },
     stream
   );
-
-  if (stream) {
-    const eventStream = (result as ReadableStream)
-      .pipeThrough(new TextDecoderStream())
-      .pipeThrough(new EventSourceParserStream())
-      .pipeThrough(
-        new TransformStream({
-          transform(chunk, controller) {
-            let { data } = chunk;
-            if (data !== `[DONE]`) {
-              const json = JSON.parse(data);
-              const completion = createCompletionFromChat(json as OpenAiChatCompletionChunk, true);
-              data = JSON.stringify(completion);
-            }
-
-            controller.enqueue(`data: ${data}\n\n`);
-          }
-        })
-      );
-    return eventStream;
-  }
-
-  return createCompletionFromChat(result as OpenAiChatCompletion);
 }
 
 export async function getOllamaChatCompletion(request: FastifyRequest, options: CliOptions) {
@@ -155,30 +113,6 @@ async function askForModelDownload(model: string, confirm = false) {
     const error = error_ as Error;
     throw new Error(`Failed to download model "${model}".\n${error.message}`);
   }
-}
-
-function createCompletionFromChat(
-  result: OpenAiChatCompletion | OpenAiChatCompletionChunk,
-  chunk = false
-): OpenAiCompletion {
-  return {
-    id: result.id.replace('chatcmpl-', 'cmpl-'),
-    object: 'text_completion',
-    created: result.created,
-    model: result.model,
-    choices: [
-      {
-        index: 0,
-        text: chunk
-          ? (result as OpenAiChatCompletionChunk).choices[0].delta.content!
-          : (result as OpenAiChatCompletion).choices[0].message.content!,
-        logprobs: null,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        finish_reason: result.choices[0].finish_reason as any
-      }
-    ],
-    usage: result.usage
-  };
 }
 
 function createEmbeddingsFromOllama(
