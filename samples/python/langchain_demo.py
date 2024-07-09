@@ -39,6 +39,7 @@ embeddings = AzureOpenAIEmbeddings(
     azure_deployment="text-embedding-ada-002"
 )
 
-# vectors = embeddings.embed_documents(["Once upon a time", "The end."])
-vectors = embeddings.embed_query("Once upon a time")
-print(vectors)
+vectors = embeddings.embed_documents(["Once upon a time", "The end."])
+
+for vector in vectors:
+    print(vector[:3])

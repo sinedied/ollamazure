@@ -98,3 +98,17 @@ curl -X POST http://localhost:4041/openai/deployments/test/embeddings \
 curl -X POST http://localhost:4041/openai/deployments/test/embeddings \
   -H "Content-Type: application/json" \
   -d '{ "input": ["Once upon a time", "The end."] }'
+
+###
+
+# Embeddings as base64
+curl -X POST http://localhost:4041/openai/deployments/test/embeddings \
+  -H "Content-Type: application/json" \
+  -d '{ "input": "Once upon a time", "encoding_format": "base64"}'
+
+###
+
+# Embeddings with token input
+curl -X POST http://localhost:4041/openai/deployments/test/embeddings \
+  -H "Content-Type: application/json" \
+  -d '{ "input": [ 12805, 5304, 264, 892 ] }'

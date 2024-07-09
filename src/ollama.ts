@@ -2,7 +2,9 @@ import { type FastifyRequest } from 'fastify';
 import { EventSourceParserStream } from 'eventsource-parser/stream';
 import { type EmbeddingsResponse, type ListResponse } from 'ollama';
 import type OpenAI from 'openai';
-import { type CliOptions, askForConfirmation, fetchApi, runCommand } from './index.js';
+import { type CliOptions } from './options.js';
+import { askForConfirmation, fetchApi, runCommand } from './util/index.js';
+import { decodeTokens } from './tokenizer.js';
 
 type OpenAiCompletion = OpenAI.Completions.Completion;
 type OpenAiCompletionRequest = OpenAI.Completions.CompletionCreateParams;
@@ -94,6 +96,7 @@ export async function getOllamaEmbeddings(request: FastifyRequest, options: CliO
   const { input } = body;
   const model = options.useDeployment ? deployment : embeddings;
   const useBase64 = body.encoding_format?.toLowerCase() === 'base64';
+  const newInput = convertEmbeddingInput(input, body.model ?? deployment);
 
   const getEmbeddings = async (input: string | number[]) =>
     fetchApi(`${ollamaUrl}/api/embeddings`, {
@@ -104,10 +107,7 @@ export async function getOllamaEmbeddings(request: FastifyRequest, options: CliO
       })
     }) as Promise<EmbeddingsResponse>;
 
-  const result = await (Array.isArray(input) && typeof input[0] !== 'number'
-    ? Promise.all(input.map(async (i) => getEmbeddings(i as string | number[])))
-    : getEmbeddings(input as string | number[]));
-
+  const result = await Promise.all(newInput.map(async (i) => getEmbeddings(i)));
   return createEmbeddingsFromOllama(model as string, result, useBase64);
 }
 
@@ -209,4 +209,13 @@ function createEmbeddingsFromOllama(
 
 function convertToBase64(data: number[]) {
   return Buffer.from(new Float32Array(data).buffer).toString('base64');
+}
+
+function convertEmbeddingInput(input: string | number[] | number[][] | string[], embeddingModel: string) {
+  let newInput = (!Array.isArray(input) || typeof input[0] === 'number' ? [input] : input) as string[] | number[][];
+  if (typeof newInput[0][0] === 'number') {
+    newInput = decodeTokens(newInput as number[][], embeddingModel);
+  }
+
+  return newInput;
 }
