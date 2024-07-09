@@ -111,7 +111,7 @@ export async function startOllamaServer(options: CliOptions) {
   }
 
   try {
-    await runInBackground('ollama', ['start'], 'Listening on');
+    await runInBackground('ollama', ['serve'], 'Listening on');
     debug('Ollama server started');
   } catch (error_) {
     const error = error_ as Error;
