@@ -1,3 +1,6 @@
 openai==1.35.10
 langchain==0.2.6
 langchain-openai==0.1.14
+llama-index==0.10.53
+llama-index-llms-azure-openai==0.1.8
+llama-index-embeddings-azure-openai==0.1.10
