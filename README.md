@@ -98,7 +98,6 @@ See all code examples in the [samples](samples) folder.
 <details>
 <summary><b>Azure OpenAI SDK</b></summary><br>
 
-
 ```typescript
 import { AzureOpenAI } from 'openai';
 
