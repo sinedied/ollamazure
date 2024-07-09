@@ -159,7 +159,7 @@ If you're using managed identity this will work the same unless you're in a loca
 
 
 ```typescript
-import { OpenAI, OpenAIEmbedding } from "llamaindex";
+import { OpenAI } from "llamaindex";
 
 // Chat completion
 const llm = new OpenAI({
@@ -244,6 +244,35 @@ model = AzureChatOpenAI(
 
 chat_completion = model.invoke([{"type": "human", "content": "Say hello!"}])
 print(chat_completion.content)
+```
+
+> [!TIP]
+> Alternatively, you can set the `AZURE_OPENAI_ENDPOINT` environment variable to `http://localhost:4041` instead of passing it to the constructor. Everything else will work the same.
+
+If you're using managed identity, this will work as well unless you're in a local container. In that case, you can use a dummy function `lambda:"1"` for the the `azure_ad_token_provider` parameter in the constructor.
+
+</details>
+
+<details>
+<summary><b>LlamaIndex</b></summary><br>
+
+```python
+from llama_index.core.llms import ChatMessage
+from llama_index.llms.azure_openai import AzureOpenAI
+
+# Chat completion
+llm = AzureOpenAI(
+    # This is where you point to your local server
+    azure_endpoint="http://localhost:4041",
+
+    # Parameters below must be provided but are not used by the local server
+    api_key="123456",
+    api_version="2024-02-01",
+    engine="gpt-4"
+)
+
+chat_completion = llm.chat([ChatMessage(role="user", content="Say hello!")])
+print(chat_completion.message.content)
 ```
 
 > [!TIP]
