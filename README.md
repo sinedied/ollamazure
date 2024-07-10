@@ -201,7 +201,7 @@ openai = AzureOpenAI(
     azure_endpoint="http://localhost:4041",
 
     # Parameters below must be provided but are not used by the local server
-    # api_key="123456",
+    api_key="123456",
     api_version="2024-02-01"
 )
 
