@@ -304,7 +304,6 @@ Console.WriteLine(completion.Content[0].Text);
 
 </details>
 
-
 <details>
 <summary><b>Semantic Kernel</b></summary><br>
 
@@ -330,3 +329,41 @@ Console.WriteLine(chatCompletion);
 
 </details>
 
+### Java
+
+<details>
+<summary><b>Azure OpenAI SDK</b></summary><br>
+
+```csharp
+package com.sample.azure;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.azure.ai.openai.*;
+import com.azure.ai.openai.models.*;
+
+public class App 
+{
+    public static void main( String[] args )
+    {
+        // Chat completion
+        OpenAIClient client = new OpenAIClientBuilder()
+            // This is where you point to your local server
+            .endpoint("http://localhost:4041")
+            .buildClient();
+
+        List<ChatRequestMessage> chatMessages = new ArrayList<>();
+        chatMessages.add(new ChatRequestUserMessage("Say hello!"));
+        
+        ChatCompletions chatCompletions = client.getChatCompletions("gpt-4",
+            new ChatCompletionsOptions(chatMessages));
+        
+        System.out.println( chatCompletions.getChoices().get(0).getMessage().getContent());
+    }
+}
+```
+
+If you have the error `Key credentials require HTTPS to prevent leaking the key`, this means that you have to avoid setting the `.credential()` option on the `OpenAIClientBuilder`. This is currently a limitation of the Azure OpenAI SDK.
+
+</details>
