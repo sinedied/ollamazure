@@ -8,6 +8,7 @@ import { decodeTokens } from './tokenizer.js';
 
 type OpenAiEmbeddings = OpenAI.Embeddings.CreateEmbeddingResponse;
 type OpenAiEmbeddingsRequest = OpenAI.Embeddings.EmbeddingCreateParams;
+type OpenAiCompletionRequest = OpenAI.Completions.CompletionCreateParams;
 type OpenAiChatCompletionRequest = OpenAI.Chat.ChatCompletionCreateParams;
 
 const debug = createDebug('ollama');
@@ -15,15 +16,22 @@ const debug = createDebug('ollama');
 export async function getOllamaCompletion(request: FastifyRequest, options: CliOptions) {
   const { ollamaUrl, model } = options;
   const { deployment } = request.params as any;
-  const body = request.body as OpenAiChatCompletionRequest;
-  const stream = Boolean(body.stream);
+  const body = request.body as OpenAiCompletionRequest;
 
+  // TODO: properly handle prompt array
+  const completionRequest = { ...body };
+  completionRequest.prompt =
+    Array.isArray(completionRequest.prompt) && typeof completionRequest.prompt?.[0] === 'string'
+      ? completionRequest.prompt[0]
+      : completionRequest.prompt;
+
+  const stream = Boolean(body.stream);
   return fetchApi(
     `${ollamaUrl}/v1/completions`,
     {
       method: 'POST',
       body: JSON.stringify({
-        ...body,
+        ...completionRequest,
         model: options.useDeployment ? deployment : model
       })
     },
