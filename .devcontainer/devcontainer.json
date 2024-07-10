@@ -13,7 +13,9 @@
     },
     "ghcr.io/devcontainers/features/python:1": {},
     "ghcr.io/devcontainers/features/dotnet:2": {},
-    "ghcr.io/devcontainers/features/java:1": {},
+    "ghcr.io/devcontainers/features/java:1": {
+      "installMaven": true
+    },
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
 
@@ -22,7 +24,8 @@
     "vscode": {
       "extensions": [
         "esbenp.prettier-vscode",
-        "humao.rest-client"
+        "humao.rest-client",
+        "GitHub.copilot"
       ]
     }
   },
