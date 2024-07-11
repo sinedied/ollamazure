@@ -124,7 +124,7 @@ console.log('Chat completion: ' + chatCompletion.choices[0]!.message?.content);
 
 Alternatively, you can set the `AZURE_OPENAI_ENDPOINT` environment variable to `http://localhost:4041` instead of passing it to the constructor. Everything else will work the same.
 
-If you're using managed identity, this will work as well unless you're in a local container. In that case, you can use a dummy function `() => '1'` for the the `azureADTokenProvider` parameter in the constructor.
+If you're using managed identity, this will work as well unless you're in a local container. In that case, you can use a dummy function `() => '1'` for the `azureADTokenProvider` parameter in the constructor.
 
 </details>
 
@@ -151,7 +151,7 @@ console.log(completion.content);
 
 Alternatively, you can set the `AZURE_OPENAI_BASE_PATH` environment variable to `http://localhost:4041/openai/deployments` instead of passing it to the constructor. Everything else will work the same.
 
-If you're using managed identity this will work the same unless you're in a local container. In that case, you can use a dummy function `() => '1'` for the the `azureADTokenProvider` parameter in the constructor.
+If you're using managed identity this will work the same unless you're in a local container. In that case, you can use a dummy function `() => '1'` for the `azureADTokenProvider` parameter in the constructor.
 
 </details>
 
@@ -184,7 +184,7 @@ console.log(chatCompletion.message.content);
 
 Alternatively, you can set the `AZURE_OPENAI_ENDPOINT` environment variable to `http://localhost:4041` instead of passing it to the constructor. Everything else will work the same.
 
-If you're using managed identity, this will work as well unless you're in a local container. In that case, you can use a dummy function `() => '1'` for the the `azureADTokenProvider` parameter in the constructor.
+If you're using managed identity, this will work as well unless you're in a local container. In that case, you can use a dummy function `() => '1'` for the `azureADTokenProvider` parameter in the constructor.
 
 </details>
 
@@ -220,7 +220,7 @@ print(chat_completion.choices[0].message.content)
 
 Alternatively, you can set the `AZURE_OPENAI_ENDPOINT` environment variable to `http://localhost:4041` instead of passing it to the constructor. Everything else will work the same.
 
-If you're using managed identity, this will work as well unless you're in a local container. In that case, you can use a dummy function `lambda:"1"` for the the `azure_ad_token_provider` parameter in the constructor.
+If you're using managed identity, this will work as well unless you're in a local container. In that case, you can use a dummy function `lambda:"1"` for the `azure_ad_token_provider` parameter in the constructor.
 
 </details>
 
@@ -247,7 +247,7 @@ print(chat_completion.content)
 
 Alternatively, you can set the `AZURE_OPENAI_ENDPOINT` environment variable to `http://localhost:4041` instead of passing it to the constructor. Everything else will work the same.
 
-If you're using managed identity, this will work as well unless you're in a local container. In that case, you can use a dummy function `lambda:"1"` for the the `azure_ad_token_provider` parameter in the constructor.
+If you're using managed identity, this will work as well unless you're in a local container. In that case, you can use a dummy function `lambda:"1"` for the `azure_ad_token_provider` parameter in the constructor.
 
 </details>
 
@@ -275,7 +275,7 @@ print(chat_completion.message.content)
 
 Alternatively, you can set the `AZURE_OPENAI_ENDPOINT` environment variable to `http://localhost:4041` instead of passing it to the constructor. Everything else will work the same.
 
-If you're using managed identity, this will work as well unless you're in a local container. In that case, you can use a dummy function `lambda:"1"` for the the `azure_ad_token_provider` parameter in the constructor.
+If you're using managed identity, this will work as well unless you're in a local container. In that case, you can use a dummy function `lambda:"1"` for the `azure_ad_token_provider` parameter in the constructor.
 
 </details>
 
