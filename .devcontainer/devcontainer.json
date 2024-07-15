@@ -11,6 +11,11 @@
     "ghcr.io/prulloac/devcontainer-features/ollama:1": {
       "pull": "phi3,all-minilm:l6-v2"
     },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": 20,
+      "moby": "false",
+      "dockerDashComposeVersion": "v2"
+    },
     "ghcr.io/devcontainers/features/python:1": {},
     "ghcr.io/devcontainers/features/dotnet:2": {},
     "ghcr.io/devcontainers/features/java:1": {
