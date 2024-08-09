@@ -83,6 +83,15 @@ export async function getOllamaEmbeddings(request: FastifyRequest, options: CliO
 export async function checkOllamaVersion(options: CliOptions) {
   let result: string;
   try {
+    await fetchApi(options.ollamaUrl, undefined, true);
+
+    debug('Ollama server is running, so we won\'t check the version');
+    return;
+  } catch {
+    debug('Ollama server not running, checking version...');
+  }
+
+  try {
     result = await runCommand('ollama --version');
   } catch (error_) {
     const error = error_ as Error;
@@ -153,17 +162,17 @@ export async function checkOllamaModels(options: CliOptions) {
   );
 
   if (!hasModel) {
-    await askForModelDownload(options.model, options.yes);
+    await askForModelDownload(options.model, options.yes, options.ollamaUrl);
   }
 
   if (!hasEmbeddings) {
-    await askForModelDownload(options.embeddings, options.yes);
+    await askForModelDownload(options.embeddings, options.yes, options.ollamaUrl);
   }
 
   return result;
 }
 
-async function askForModelDownload(model: string, confirm = false) {
+async function askForModelDownload(model: string, confirm = false, ollamaUrl: string) {
   confirm ||= await askForConfirmation(`Model "${model}" not found. Do you want to download it?`);
   if (!confirm) {
     throw new Error(`Model "${model}" is not available.\nPlease run "ollama pull ${model}" to download it.`);
@@ -171,7 +180,14 @@ async function askForModelDownload(model: string, confirm = false) {
 
   try {
     console.info(`Downloading model "${model}"...`);
-    runCommandSync(`ollama pull ${model}`);
+    await fetchApi(
+      `${ollamaUrl}/api/pull`,
+      {
+        method: "POST",
+        body: JSON.stringify({ model })
+      },
+      false
+    );
   } catch (error_) {
     const error = error_ as Error;
     throw new Error(`Failed to download model "${model}".\n${error.message}`);
