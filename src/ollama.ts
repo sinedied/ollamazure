@@ -85,7 +85,7 @@ export async function checkOllamaVersion(options: CliOptions) {
   try {
     await fetchApi(options.ollamaUrl, undefined, true);
 
-    debug('Ollama server is running, so we won\'t check the version');
+    debug("Ollama server is running, so we won't check the version");
     return;
   } catch {
     debug('Ollama server not running, checking version...');
@@ -162,17 +162,17 @@ export async function checkOllamaModels(options: CliOptions) {
   );
 
   if (!hasModel) {
-    await askForModelDownload(options.model, options.yes, options.ollamaUrl);
+    await askForModelDownload(options.model, options.ollamaUrl, options.yes);
   }
 
   if (!hasEmbeddings) {
-    await askForModelDownload(options.embeddings, options.yes, options.ollamaUrl);
+    await askForModelDownload(options.embeddings, options.ollamaUrl, options.yes);
   }
 
   return result;
 }
 
-async function askForModelDownload(model: string, confirm = false, ollamaUrl: string) {
+async function askForModelDownload(model: string, ollamaUrl: string, confirm = false) {
   confirm ||= await askForConfirmation(`Model "${model}" not found. Do you want to download it?`);
   if (!confirm) {
     throw new Error(`Model "${model}" is not available.\nPlease run "ollama pull ${model}" to download it.`);
@@ -183,7 +183,7 @@ async function askForModelDownload(model: string, confirm = false, ollamaUrl: st
     await fetchApi(
       `${ollamaUrl}/api/pull`,
       {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify({ model })
       },
       false
