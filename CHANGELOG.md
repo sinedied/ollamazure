@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/sinedied/ollamazure/compare/1.3.1...1.4.0) (2024-08-10)
+
+
+### Features
+
+* better support for this tool as an Ollama proxy ([#4](https://github.com/sinedied/ollamazure/issues/4)) ([aa19050](https://github.com/sinedied/ollamazure/commit/aa19050fb4e717b59881a3a80648cdb072f2b9f4)), closes [#3](https://github.com/sinedied/ollamazure/issues/3)
+
 ## [1.3.1](https://github.com/sinedied/ollamazure/compare/1.3.0...1.3.1) (2024-07-10)
 
 
