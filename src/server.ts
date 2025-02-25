@@ -66,7 +66,7 @@ export async function startServer(options: CliOptions) {
     await checkOllamaVersion(options);
     await startOllamaServer(options);
     await checkOllamaModels(options);
-    await app.listen({ port: options.port });
+    await app.listen({ port: options.port, host: options.host });
 
     console.log(`Azure OpenAI emulator started on http://${options.host}:${options.port}`);
     console.log('Press CTRL+C to quit.');
