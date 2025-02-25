@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/sinedied/ollamazure/compare/1.4.0...1.4.1) (2025-02-25)
+
+
+### Bug Fixes
+
+* pass host option to fastify ([#5](https://github.com/sinedied/ollamazure/issues/5)) ([df5edb1](https://github.com/sinedied/ollamazure/commit/df5edb1a9550e4530ce638ffce6957a1ff0f4e0a))
+
 # [1.4.0](https://github.com/sinedied/ollamazure/compare/1.3.1...1.4.0) (2024-08-10)
 
 
